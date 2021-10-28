@@ -3,7 +3,6 @@ package ru.job4j;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -14,18 +13,12 @@ import java.util.function.Predicate;
  * @version 0.1
  * @since 18.03.2021
  */
-public class Search {
-
-    public static void main(String[] args) throws IOException {
-        if (args.length != 2) {
-            throw new IllegalArgumentException(
-                    "Example: java -jar search.jar <Path> <FileExtension>");
-        }
-        Path start = Paths.get(args[0]);
-        search(start, p -> p
-                .toFile()
-                .getName()
-                .endsWith(args[1])).forEach(System.out::println);
+final class Search {
+    /**
+     * Утилитный класс поэтому переобъявленный дэфолтный конструктор и
+     * приватный.
+     */
+    private Search() {
     }
 
     /**
@@ -36,7 +29,9 @@ public class Search {
      * @return Список найденных файлов.
      * @throws IOException При возникновении IO исключений.
      */
-    public static List<Path> search(Path root, Predicate<Path> condition) throws IOException {
+    public static List<Path> search(final Path root,
+                                    final Predicate<Path> condition)
+            throws IOException {
         PrintFiles searcher = new PrintFiles(condition);
         Files.walkFileTree(root, searcher);
         return searcher.getPaths();

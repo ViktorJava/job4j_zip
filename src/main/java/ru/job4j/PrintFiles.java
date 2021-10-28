@@ -12,25 +12,32 @@ import java.util.function.Predicate;
 import static java.nio.file.FileVisitResult.CONTINUE;
 
 /**
- * Это специальный класс, в котором инкапсулируется вся логика обхода дерева файлов.
- * Поместил сюда всю логику поиска файлов по определённому предикату.
+ * Это специальный класс, в котором инкапсулируется вся логика обхода
+ * дерева файлов. Поместил сюда всю логику поиска файлов по определённому
+ * предикату.
  *
  * @author ViktorJava (gipsyscrew@gmail.com)
  * @version 0.1
  * @since 18.03.2021
  */
 public class PrintFiles implements FileVisitor<Path> {
+    /**
+     * Список директорий.
+     */
     private final List<Path> paths;
+    /**
+     * Хранилище лямбды.
+     */
     private final Predicate<Path> condition;
 
     /**
      * Конструктор.
      *
-     * @param condition Предикат разыскиваемых файлов.
+     * @param cond Предикат разыскиваемых файлов.
      */
-    public PrintFiles(Predicate<Path> condition) {
+    public PrintFiles(final Predicate<Path> cond) {
         this.paths = new ArrayList<>();
-        this.condition = condition;
+        this.condition = cond;
     }
 
     /**
@@ -43,14 +50,16 @@ public class PrintFiles implements FileVisitor<Path> {
     }
 
     /**
-     * Здесь мы и описываем что нужно делать с каждым файлом в каждой директории.
+     * Здесь мы и описываем что нужно делать с каждым файлом
+     * в каждой директории.
      *
      * @param file  Ссылка на файл.
      * @param attrs Основные атрибуты просматриваемого файла.
      * @return Продолжаем обход дерева CONTINUE.
      */
     @Override
-    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+    public FileVisitResult visitFile(final Path file,
+                                     final BasicFileAttributes attrs) {
         if (condition.test(file)) {
             paths.add(file);
         }
@@ -65,8 +74,8 @@ public class PrintFiles implements FileVisitor<Path> {
      * @return Результат посещения.
      */
     @Override
-    public FileVisitResult preVisitDirectory(
-            Path dir, BasicFileAttributes attrs) {
+    public FileVisitResult preVisitDirectory(final Path dir,
+                                             final BasicFileAttributes attrs) {
         return CONTINUE;
     }
 
@@ -78,7 +87,8 @@ public class PrintFiles implements FileVisitor<Path> {
      * @return Результат посещения.
      */
     @Override
-    public FileVisitResult visitFileFailed(Path file, IOException exc) {
+    public FileVisitResult visitFileFailed(final Path file,
+                                           final IOException exc) {
         return CONTINUE;
     }
 
@@ -95,7 +105,8 @@ public class PrintFiles implements FileVisitor<Path> {
      * @return Результат посещения.
      */
     @Override
-    public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
+    public FileVisitResult postVisitDirectory(final Path dir,
+                                              final IOException exc) {
         return CONTINUE;
     }
 }

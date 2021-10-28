@@ -1,6 +1,11 @@
 package ru.job4j;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -19,13 +24,18 @@ import java.util.zip.ZipOutputStream;
  */
 public class Zip {
     /**
+     * Обязательное число аргументов.
+     */
+    public static final int ARG_COUNT = 3;
+
+    /**
      * Метод архивирует файлы, путь и имя которых получаем через аргумент
      * в виде списка.
      *
      * @param sources Список архивируемых файлов.
      * @param target  Имя и расширение архивного файла.
      */
-    public void packFiles(List<File> sources, File target) {
+    public void packFiles(final List<File> sources, final File target) {
         try (ZipOutputStream zip = new ZipOutputStream(
                 new BufferedOutputStream(new FileOutputStream(target)))) {
             for (File file: sources) {
@@ -48,7 +58,8 @@ public class Zip {
      * @param exclude  Расширение исключенных файлов.
      * @return Список файлов.
      */
-    private static List<File> searchFile(Path filePath, String exclude) {
+    private static List<File> searchFile(final Path filePath,
+                                         final String exclude) {
         List<Path> listPaths = new ArrayList<>();
         try {
             listPaths = Search.search(filePath,
@@ -65,11 +76,18 @@ public class Zip {
         return listFiles;
     }
 
-    public static void main(String[] args) {
-        if (args.length != 3) {
+    /**
+     * Точка входа.
+     *
+     * @param args аргументы.
+     */
+    public static void main(final String[] args) {
+        if (args.length != ARG_COUNT) {
             throw new IllegalArgumentException(
-                    "Example: java -jar zip.jar -d=<PATH> -e=<EXCLUDE_FILE> -o=<ARCHIVE_NAME>"
-                            + "\n java -jar pack.jar -d=c:\\projects -e=txt -o=zip");
+                    "Example: java -jar zip.jar -d=<PATH> "
+                            + "-e=<EXCLUDE_FILE> -o=<ARCHIVE_NAME>"
+                            + "\n java -jar pack.jar "
+                            + "-d=c:\\projects -e=txt -o=zip");
         }
         ArgsName argsName = ArgsName.of(args);
         Path root = Paths.get(argsName.get("d"));
